@@ -1,7 +1,14 @@
 class Counter{
  
-  int count = 0;
+  // Config for Counter
+  
+  int bitsAmount = 20;
   float gateTimems = 0;
+  
+  
+  int count = 0;
+    
+ 
   float  currentTimems = 0;
   float calculatedValue;
   
@@ -9,6 +16,32 @@ class Counter{
   
     this.gateTimems = gateTimems;
     
+  }
+  
+  
+  
+  boolean[] getBits(){
+   
+    boolean[] bitsArray = new boolean[bitsAmount];
+    
+    for(int x = 0; x < bitsAmount-1 ; x++){
+      
+      bitsArray[x] = (count & (1 << x)) != 0;
+    
+    }
+    
+    return bitsArray;
+    
+  }
+  
+  void setGateTime(float timeInMs){
+   
+    gateTimems = timeInMs;
+    
+  }
+  
+  float getGateTime(){
+   return gateTimems; 
   }
   
   void count(){

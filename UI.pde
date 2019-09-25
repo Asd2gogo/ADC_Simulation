@@ -79,6 +79,42 @@ class Ui{
    
  }
  
+ 
+ void drawCounterBitIndicator(boolean bits[]){
+   
+  for(int x = 0; x < bits.length; x++){
+   
+    drawBall(100 + (30*x), 400, bits[x]);
+    
+  }
+   
+    println();
+   
+ }
+ 
+ 
+ void drawBall(int x, int y, boolean on){
+  pushMatrix();
+   translate(x, y);
+   strokeWeight(2);
+   
+   if(on){
+     print("on ");
+   fill(255,125, 125);
+   }else{
+     print("off ");
+   fill(0);
+   }
+   
+   
+   ellipse(0,0, 20,20);
+   
+  
+   
+ popMatrix();
+   
+ }
+ 
  float getSliderValue(String name){
   for(Slider slider : allConfigSlider){
     if(slider.getNameString().equals(name)){

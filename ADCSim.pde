@@ -83,9 +83,12 @@ void draw(){
   if(!myComparator.compare()){
     myOp.shortCap();
     myCounter.count();
+   
+   
+   
   }
   
- println("Befor Draw   "  + (millis()-scriptTimer));
+
 
 
   if(((floor(counter*1000)) % (floor(myUi.getSliderValue("GraphAuflösung")))) == 0){
@@ -104,7 +107,8 @@ void draw(){
   
    }
    myPlot.setPoints(voltagePoints);
-   myPlot.defaultDraw();
+   myUi.drawCounterBitIndicator(myCounter.getBits());
+   
    
     //<>//
    
@@ -113,10 +117,7 @@ void draw(){
    //println("Spannung" + myCounter.getLastCount());
    
    
-   
-  println("After  " +  (millis()-scriptTimer));
-  println("NEU");
-  println();
+  
 }
 
 
