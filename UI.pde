@@ -20,7 +20,7 @@ class Ui{
     int xPosAnimationSpeed = 0;
     
     int limitLowAnimationSpeed = 1;
-    int limitHighAnimationSpeed = 50;
+    int limitHighAnimationSpeed = 100;
   //XAchseSkalierung
     int xPosGraphScale = 0;
     
@@ -33,18 +33,52 @@ class Ui{
     int limitLowGraphResolution = 1;
     int limitHighGraphResolution = 10;
     
+  
+   //R Widerstand OHM des Integrators -> Ladestrom  
+    int xPosResistorValue = 0;
+    
+    int limitLowResistorValue = 100;
+    int limitHighResistorValue = 500;
+    
+      
+   //C Kondesator Nano Fahrad für den Integrator -> Ladezeit
+    int xPosCapacitorValue = 0;
+    
+    int limitLowCapacitorValue = 100;
+    int limitHighCapacitorValue = 500;
+    
+    
+    
+        //Counter Bits
+    int xPosCounterBits = 0;
+    
+    int limitLowCounterBits = 2;
+    int limitHighCounterBits = 10;
+    
+      //Gate Time in ms
+    int xPosGateTime = 0;
+    
+    int limitLowGateTime = 100;
+    int limitHighGateTime = 500;
     
     
     
     
+    
+    
+  BlockDiagram myBlock;
   
   ArrayList<Slider> allConfigSlider;
   
  
-  Ui(PApplet applet){  
+  Ui(PApplet applet){
+    
   mainPApplet = applet;
+  
   allConfigSlider = new ArrayList<Slider>();
- 
+  
+  myBlock = new BlockDiagram();
+  
   setupSlider();
   
   
@@ -54,6 +88,12 @@ class Ui{
  void update(){
   
 
+   
+ }
+ 
+ void drawBlockDiagram(){
+  
+   myBlock.drawAll();
    
  }
  
@@ -71,6 +111,18 @@ class Ui{
    Slider resolutionSlider = new Slider(mainPApplet, "GraphAuflösung", allPosx, getYPos(3) ,getSliderWidth(), getSliderHeight(),limitLowGraphResolution, limitHighGraphResolution);
    allConfigSlider.add(resolutionSlider);
    
+   Slider resistorSlider = new Slider(mainPApplet, "Widerstand", allPosx, getYPos(5) ,getSliderWidth(), getSliderHeight(),limitLowResistorValue, limitHighResistorValue);
+   allConfigSlider.add(resistorSlider);
+   
+   Slider capacitorSlider = new Slider(mainPApplet, "Kondensator", allPosx, getYPos(6) ,getSliderWidth(), getSliderHeight(),limitLowCapacitorValue, limitHighCapacitorValue);
+   allConfigSlider.add(capacitorSlider);
+   
+    Slider gateTimeSlider = new Slider(mainPApplet, "GateTimeNs", allPosx, getYPos(7) ,getSliderWidth(), getSliderHeight(),limitLowGateTime, limitHighGateTime);
+   allConfigSlider.add(gateTimeSlider);
+   
+      Slider counterBitsSlider = new Slider(mainPApplet, "CounterBits", allPosx, getYPos(8) ,getSliderWidth(), getSliderHeight(),limitLowCounterBits, limitHighCounterBits);
+   allConfigSlider.add(counterBitsSlider);
+   
    
    
    for(Slider slider : allConfigSlider){
@@ -83,12 +135,11 @@ class Ui{
  void drawCounterBitIndicator(boolean bits[]){
    
   for(int x = 0; x < bits.length; x++){
+    
    
     drawBall(100 + (30*x), 400, bits[x]);
     
   }
-   
-    println();
    
  }
  
@@ -99,10 +150,10 @@ class Ui{
    strokeWeight(2);
    
    if(on){
-     print("on ");
+ 
    fill(255,125, 125);
    }else{
-     print("off ");
+
    fill(0);
    }
    

@@ -2,15 +2,16 @@ class Counter{
  
   // Config for Counter
   
-  int bitsAmount = 20;
+  int bitsAmount = 5;
   float gateTimems = 0;
+  
   
   
   int count = 0;
     
  
   float  currentTimems = 0;
-  float calculatedValue;
+  float savedCount = 0;
   
   Counter(float gateTimems){
   
@@ -24,7 +25,9 @@ class Counter{
    
     boolean[] bitsArray = new boolean[bitsAmount];
     
-    for(int x = 0; x < bitsAmount-1 ; x++){
+  
+    
+    for(int x = 0; x < bitsAmount ; x++){
       
       bitsArray[x] = (count & (1 << x)) != 0;
     
@@ -34,37 +37,39 @@ class Counter{
     
   }
   
+  void saveCount(){
+    
+    savedCount = count;
+    
+  }
+  
+ void resetCount(){
+   count = 0;
+ }
+  
   void setGateTime(float timeInMs){
    
     gateTimems = timeInMs;
     
   }
   
-  float getGateTime(){
-   return gateTimems; 
-  }
+
   
   void count(){
-   count++; 
-  }
-  
-  void setTimeDeltams(float deltaTimems){
-   currentTimems = currentTimems + deltaTimems; 
-   
-   if(currentTimems >= gateTimems){
-     currentTimems = 0;
-     
-     calculatedValue = count;
-     count = 0;
-     
+    
+    if(count < pow(2, bitsAmount)-1){
+   count++;
+    }else{
+     count = 0; 
     }
+  }
+  
 
+  int getSavedCount(){
+   return floor(savedCount); 
   }
-  
-  float getLastCount(){
-   return calculatedValue; 
+
+  void setBits(int bitAmount){
+      bitsAmount = bitAmount;
   }
-  
-  
-  
 }

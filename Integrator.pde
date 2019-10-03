@@ -1,22 +1,20 @@
 class Integrator {
   
-  float r1;
+  float r;
   float c;
   float tau;
   float capVoltage = 0;
   
  Integrator(float res, float cap){// in kOhm   in Mikro Fahrad
-   r1 = res * pow(10, 3);
-   c = cap * pow(10,-6);
-   tau = r1 * c;
-   
+  r = res * pow(10, 3) ;
+      c = cap * pow(10,-6);
  
  }
  
  
  void integrate(float inputVoltage, float time){   // in Volts and ms
  
-   float current = inputVoltage/ r1;
+   float current = inputVoltage/ r;
    float integrationTimems = time * pow(10,-3);
    
    
@@ -33,6 +31,17 @@ class Integrator {
  
  void shortCap(){
   capVoltage = 0; 
+ }
+ 
+ void setResitorValue(float value){
+     r = value;
+   
+ }
+ 
+  void setCapacitorValue(float value){
+    
+   c = value * pow(10,-9);
+   
  }
   
   
