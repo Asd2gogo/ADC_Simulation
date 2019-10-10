@@ -5,6 +5,7 @@ import grafica.*;
 
 float inputVoltage = 4;
 float timeStep = 0.0001;
+boolean play = false;
 float counter = 0.0;
 int scriptTimer = 0;
 
@@ -24,16 +25,19 @@ GPointsArray gateTimePoints = new GPointsArray();
 
 Ui myUi;
 GPlot myPlot;
+PImage myCircuitImage;
 
 
 void setup() {
 
 
-  size(1200, 700);
+  size(1280, 1024);
   frameRate(60);
-  
+
   myUi = new Ui(this);
   myOutGraph  = new OutputGraph(this);
+
+  myCircuitImage = loadImage("ADC-Schaltplan.png");
 
 
   myPlot  = new GPlot(this);
@@ -49,74 +53,82 @@ void setup() {
 
 
 void draw() {
-  scriptTimer = millis();
+  if (play || counter < 0.0001) {
+    scriptTimer = millis();
 
-  clear();
-  background(200, 200, 200);
-  
-  updateSliderConfig();
-  //inputVoltage = myUi.getSliderValue("InputVoltage");
+    clear();
+    background(200, 200, 200);
 
 
-  for (int x = 0; x < myUi.getSliderValue("AnimationSpeed"); x++) {
+    updateSliderConfig();
+    //inputVoltage = myUi.getSliderValue("InputVoltage");
 
-    checkGraphXSize();
 
-    if (counter > graphXLimMax) {
+    for (int x = 0; x < myUi.getSliderValue("AnimationSpeed"); x++) {
 
-      graphXLimMax = graphXLimMax + (counter - graphXLimMin);
-      graphXLimMin = counter;
+      checkGraphXSize();
+
+      if (counter > graphXLimMax) {
+        
+        voltagePoints.removeRange(0, voltagePoints.getNPoints());
+
+        graphXLimMax = graphXLimMax + (counter - graphXLimMin);
+        graphXLimMin = counter;
+      }
+
+
+      myPlot.setXLim(graphXLimMin, graphXLimMax);
+
+
+      myOp.integrate(inputVoltage, timeStep);
+      myComparator.setInvertingInputVoltage(myOp.getCapVoltage());
+      if (!myComparator.compare()) {
+        myOp.shortCap();
+        myCounter.count();
+      }
+
+
+
+
+      if (((floor(counter*1000)) % (floor(myUi.getSliderValue("GraphAuflösung")))) == 0) {
+
+        voltagePoints.add(counter, myOp.getCapVoltage());
+      }
+
+      // println(myPlot.getPoints().getNPoints() / counter);
+
+
+      //println(myPlot.getPoints().getNPoints());  //Print amaout off points saved from graph
+      myTimer.setTimeDeltaMs(timeStep);
+
+      if (myTimer.isGateTimeExceeded()) {
+
+        myOutGraph.addPoint(new GPoint(counter, myCounter.getSavedCount()));
+
+        myTimer.resetTime();
+        myCounter.saveCount();
+        myCounter.resetCount();
+
+        myOutGraph.addPoint(new GPoint(counter, myCounter.getSavedCount()));
+      }
+
+      counter = counter + timeStep;
     }
+    myPlot.defaultDraw();
+    myPlot.setPoints(voltagePoints);
 
 
-    myPlot.setXLim(graphXLimMin, graphXLimMax);
-
-
-    myOp.integrate(inputVoltage, timeStep);
-    myComparator.setInvertingInputVoltage(myOp.getCapVoltage());
-    if (!myComparator.compare()) {
-      myOp.shortCap();
-      myCounter.count();
-    }
-
-
-
-
-    if (((floor(counter*1000)) % (floor(myUi.getSliderValue("GraphAuflösung")))) == 0) {
-
-      voltagePoints.add(counter, myOp.getCapVoltage());
-    }
-
-    // println(myPlot.getPoints().getNPoints() / counter);
-
-
-    //println(myPlot.getPoints().getNPoints());  //Print amaout off points saved from graph
-    myTimer.setTimeDeltaMs(timeStep);
     
-    if(myTimer.isGateTimeExceeded()){
-      
-      myOutGraph.addPoint(new GPoint(counter, myCounter.getSavedCount()));
-     
-      myTimer.resetTime();
-      myCounter.saveCount();
-      myCounter.resetCount();
-      
-      myOutGraph.addPoint(new GPoint(counter, myCounter.getSavedCount()));
-      
-    }
+    //myUi.drawBlockDiagram();
+     showCircuitDiagram();
+     myUi.drawCounterBitIndicator(myCounter.getBits(), 660, 507);
+     myUi.drawCounterBitIndicator(myCounter.getSavedBits(), 660, 340);
+     myOutGraph.display();
+   
 
-    counter = counter + timeStep;
-     
+    println("Runtime =  " + (millis()- scriptTimer));
+   
   }
-  myPlot.defaultDraw();
-  myPlot.setPoints(voltagePoints);
- 
-
-  myUi.drawCounterBitIndicator(myCounter.getBits());
-  //myUi.drawBlockDiagram();
-  myOutGraph.display();
-  
-  println("Runtime =  " + (millis()- scriptTimer));
 }
 
 
@@ -126,11 +138,34 @@ void checkGraphXSize() {
 }
 
 
-void updateSliderConfig(){
+void updateSliderConfig() {
+
+  inputVoltage = myUi.getSliderValue("InputVoltage");
+  myOp.setResitorValue(floor(myUi.getSliderValue("Widerstand")));
+  myOp.setCapacitorValue(floor(myUi.getSliderValue("Kondensator")));
+  myTimer.setGateTime(myUi.getSliderValue("GateTimeNs"));
+  myCounter.setBits(floor(myUi.getSliderValue("CounterBits")));
+}
+
+void showCircuitDiagram() {
+
+  image(myCircuitImage, 0, 270);
+  drawLoadingBar(myTimer.getGateTimePercent(), 880, 667, 100);
   
-      inputVoltage = myUi.getSliderValue("InputVoltage");
-      myOp.setResitorValue(floor(myUi.getSliderValue("Widerstand")));
-      myOp.setCapacitorValue(floor(myUi.getSliderValue("Kondensator")));
-      myTimer.setGateTime(myUi.getSliderValue("GateTimeNs"));
-      myCounter.setBits(floor(myUi.getSliderValue("CounterBits")));
+  
+}
+
+void drawLoadingBar(float step, int xPos, int yPos, float barWidth){
+
+  strokeWeight(6);
+  println((barWidth * (step/100 )));
+  line(xPos, yPos, xPos + (barWidth * (step/100 ))  ,yPos);
+ 
+
+}
+
+
+public void handleButtonEvents(GButton button, GEvent event) {
+
+  play = !play;
 }

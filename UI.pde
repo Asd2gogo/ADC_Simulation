@@ -2,8 +2,8 @@ class Ui{
   
     PApplet mainPApplet;
   
-    int allPosx = 800;
-    int allPosy = 20;
+    int allPosx = 1000;
+    int allPosy = 50;
     
     int allySpacing = 40;
     
@@ -58,7 +58,7 @@ class Ui{
       //Gate Time in ms
     int xPosGateTime = 0;
     
-    int limitLowGateTime = 100;
+    int limitLowGateTime = 50;
     int limitHighGateTime = 500;
     
     
@@ -69,6 +69,7 @@ class Ui{
   BlockDiagram myBlock;
   
   ArrayList<Slider> allConfigSlider;
+  GButton playBtn;
   
  
   Ui(PApplet applet){
@@ -80,6 +81,7 @@ class Ui{
   myBlock = new BlockDiagram();
   
   setupSlider();
+  setupButtons();
   
   
   }
@@ -131,13 +133,19 @@ class Ui{
    
  }
  
+ void setupButtons(){
+  
+   playBtn = new GButton(mainPApplet, width - 100, 2, 100 , 50, "PlayPause");
+   
+ }
  
- void drawCounterBitIndicator(boolean bits[]){
+ 
+ void drawCounterBitIndicator(boolean bits[], int xPos, int yPos){
    
   for(int x = 0; x < bits.length; x++){
     
    
-    drawBall(100 + (30*x), 400, bits[x]);
+    drawBall(xPos + (30*x), yPos, bits[x]);
     
   }
    
@@ -177,7 +185,7 @@ class Ui{
  }
  
  int getYPos(int position){
-  return position * allySpacing;
+  return position * allySpacing + allPosy;
  }
  
  

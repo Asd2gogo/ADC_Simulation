@@ -40,6 +40,16 @@ class Timer{
    return timeMs; 
   }
   
+  int getGateTimePercent(){
+   
+    int percent;
+    
+    percent = floor((timeMs * 100) / gateTimeMs);
+   
+    return percent;
+    
+  }
+  
   void setGateTime(float time){
      gateTimeMs = time/1000;
   }
