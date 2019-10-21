@@ -40,7 +40,7 @@ void setup() {
 
   myUi = new Ui(this);
   myOutGraph  = new OutputGraph(this);
-  
+
 
   myCircuitImage = loadImage("ADC-Schaltplan.png");
 
@@ -51,14 +51,16 @@ void setup() {
   myPlot.setYLim(0, 1.5);
   myPlot.setDim(700, 200);
   myPlot.setTitleText("Integrator Voltage");
+  myPlot.getYAxis().setAxisLabelText("Ua (V)");
+  myPlot.getXAxis().setAxisLabelText("Time (ms)");
   //myPlot.addLayer("GateTime", myPolygonManager.getLatestPoly());
   myPlot.addLayer("VoltagePoints", voltagePoints);
   myPlot.addLayer("GateTime", myPolygonManager.getLatestPoly());
-  
+
   myPlot.getLayer("VoltagePoints").setLineWidth(2);
   myPlot.getLayer("VoltagePoints").setLineColor(0);
-  
-  
+
+
 
   //myPlot.addPoints(voltagePoints);
 }
@@ -66,11 +68,13 @@ void setup() {
 
 
 void draw() {
+  clear();
+  background(200, 200, 200);
+
   if (play || counter < 0.0001) {
     scriptTimer = millis();
 
-    clear();
-    background(200, 200, 200);
+
 
 
     updateSliderConfig();
@@ -82,7 +86,7 @@ void draw() {
       checkGraphXSize();
 
       if (counter > graphXLimMax) {
-        
+
         voltagePoints.removeRange(0, voltagePoints.getNPoints());
 
         graphXLimMax = graphXLimMax + (counter - graphXLimMin);
@@ -110,8 +114,8 @@ void draw() {
 
       //println(myPlot.getPoints().getNPoints());  //Print amaout off points saved from graph
       myTimer.setTimeDeltaMs(timeStep);
-      
-      
+
+
 
       if (myTimer.isGateTimeExceeded()) {
 
@@ -123,42 +127,39 @@ void draw() {
         myCounter.resetCount();
 
         myOutGraph.addPoint(new GPoint(counter, myCounter.getSavedCount()));
-        
-        
-        
       }
 
       myPolygonManager.updateLatestPoly(timeStep);
-      
-      
+
+
       counter = counter + timeStep;
-      
     }
-    
-    
-    
-  
+
+
+
+
 
     myPlot.getLayer("VoltagePoints").setPoints(voltagePoints);
-
-      drawMainPlot();
-    //myPlot.defaultDraw();
-    
-    
-
-    
-    //myUi.drawBlockDiagram();
-    
-     showCircuitDiagram();
-     myUi.drawCounterBitIndicator(myCounter.getBits(), 660, 507);
-     myUi.drawCounterBitIndicator(myCounter.getSavedBits(), 660, 340);
-     myOutGraph.display();
-   
-
-    println("Runtime =  " + (millis()- scriptTimer));
-   
   }
+ 
+  //myPlot.defaultDraw();
+
+
+
+
+  //myUi.drawBlockDiagram();
+
+  showCircuitDiagram();
+   drawMainPlot();
+  updateBlockDiagramText();
+  myUi.drawCounterBitIndicator(myCounter.getBits(), 660, 507);
+  myUi.drawCounterBitIndicator(myCounter.getSavedBits(), 660, 340);
+  myOutGraph.display();
+
+
+  println("Runtime =  " + (millis()- scriptTimer));
 }
+
 
 
 void checkGraphXSize() {
@@ -180,17 +181,13 @@ void showCircuitDiagram() {
 
   image(myCircuitImage, 0, 270);
   drawLoadingBar(myTimer.getGateTimePercent(), 880, 667, 100);
-  
-  
 }
 
-void drawLoadingBar(float step, int xPos, int yPos, float barWidth){
+void drawLoadingBar(float step, int xPos, int yPos, float barWidth) {
 
   strokeWeight(6);
   println((barWidth * (step/100 )));
-  line(xPos, yPos, xPos + (barWidth * (step/100 ))  ,yPos);
- 
-
+  line(xPos, yPos, xPos + (barWidth * (step/100 )), yPos);
 }
 
 
@@ -199,32 +196,62 @@ public void handleButtonEvents(GButton button, GEvent event) {
   play = !play;
 }
 
-void drawRects(){
- 
- for (GPointsArray array : myPolygonManager.getArrays()){
-   
-   myPlot.getLayer("GateTime").drawPolygon(array, myPolygonManager.getColor(myPolygonManager.getArrays().indexOf(array)%18));
-   
- }
- 
-  
-  
+void drawRects() {
+
+  for (GPointsArray array : myPolygonManager.getArrays()) {
+
+    myPlot.getLayer("GateTime").drawPolygon(array, myPolygonManager.getColor(myPolygonManager.getArrays().indexOf(array)%18));
+  }
 }
 
 
-void drawMainPlot(){
+void drawMainPlot() {
+
+  myPlot.beginDraw();
+  myPlot.drawBackground();
+  myPlot.drawBox();
+  myPlot.drawXAxis();
+  myPlot.drawYAxis();
+  myPlot.drawTopAxis();
+  myPlot.drawRightAxis();
+  myPlot.drawTitle();
+  drawRects();
+  myPlot.getLayer("VoltagePoints").drawLines();
+
+
+  myPlot.endDraw();
+}
+
+void updateBlockDiagramText(){
   
-    myPlot.beginDraw();
-    myPlot.drawBackground();
-    myPlot.drawBox();
-    myPlot.drawXAxis();
-    myPlot.drawYAxis();
-    myPlot.drawTopAxis();
-    myPlot.drawRightAxis();
-    myPlot.drawTitle();
-    drawRects();
-    myPlot.getLayer("VoltagePoints").drawLines();
+  textSize(15);
   
-    
-    myPlot.endDraw();
+   String inputVoltage = nf(myUi.getSliderValue("InputVoltage"));        //Eingangsspannung
+   if(inputVoltage.length()> 1){
+     inputVoltage = inputVoltage.substring(0,3);
+   }
+  text("Eingangs" +"\n" +  "Spannung" + "\n     "  + inputVoltage + "V" ,20, 530 );
+  
+  
+  textSize(17);
+    String resitor = nf(myUi.getSliderValue("Widerstand"));        //Eingangsspannung
+   if(resitor.length()> 3){
+     resitor = resitor.substring(0,3);
+   }
+  text(" =" + resitor +"Ω" ,195, 495 );
+  
+  
+    textSize(17);
+    String capacitor = nf(myUi.getSliderValue("Kondensator"));        //Eingangsspannung
+   if(capacitor.length()> 3){
+     capacitor = capacitor.substring(0,3);
+   }
+  text(" =" + capacitor +"nF" ,365, 431 );
+  
+      textSize(13);
+    String time = nf(myUi.getSliderValue("GateTimeNs"));        //Eingangsspannung
+   if(time.length()> 3){
+     time = time.substring(0,3);
+   }
+  text( time +"ns" ,960, 652 );
 }

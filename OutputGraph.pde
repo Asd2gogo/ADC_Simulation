@@ -14,6 +14,7 @@ class OutputGraph{
     myPlot.setPos(0, 680);
      myPlot.setDim(700, 200);
     myPlot.setPointSize(0);
+    myPlot.getYAxis().setAxisLabelText("Count");
     
   }
   

@@ -95,34 +95,34 @@ class Ui{
  
  void drawBlockDiagram(){
   
-   myBlock.drawAll();
+
    
  }
  
  void setupSlider(){
   
-   Slider inputVoltageSlider = new Slider(mainPApplet, "InputVoltage", allPosx, getYPos(0),getSliderWidth(), getSliderHeight(),limitLowInputVoltage, limitHighInputVoltage);
+   Slider inputVoltageSlider = new Slider(mainPApplet, "InputVoltage", allPosx, getYPos(7),getSliderWidth(), getSliderHeight(),limitLowInputVoltage, limitHighInputVoltage);
    allConfigSlider.add(inputVoltageSlider);
    
-   Slider speedSlider = new Slider(mainPApplet, "AnimationSpeed", allPosx, getYPos(1) ,getSliderWidth(), getSliderHeight(),limitLowAnimationSpeed, limitHighAnimationSpeed);
+   Slider speedSlider = new Slider(mainPApplet, "AnimationSpeed", allPosx, getYPos(0) ,getSliderWidth(), getSliderHeight(),limitLowAnimationSpeed, limitHighAnimationSpeed);
    allConfigSlider.add(speedSlider);
    
-   Slider scaleSlider = new Slider(mainPApplet, "xAchseSkalierung", allPosx, getYPos(2) ,getSliderWidth(), getSliderHeight(),limitLowGraphScale, limitHighGraphScale);
+   Slider scaleSlider = new Slider(mainPApplet, "xAchseSkalierung", allPosx, getYPos(1) ,getSliderWidth(), getSliderHeight(),limitLowGraphScale, limitHighGraphScale);
    allConfigSlider.add(scaleSlider);
    
-   Slider resolutionSlider = new Slider(mainPApplet, "GraphAuflösung", allPosx, getYPos(3) ,getSliderWidth(), getSliderHeight(),limitLowGraphResolution, limitHighGraphResolution);
+   Slider resolutionSlider = new Slider(mainPApplet, "GraphAuflösung", allPosx, getYPos(2) ,getSliderWidth(), getSliderHeight(),limitLowGraphResolution, limitHighGraphResolution);
    allConfigSlider.add(resolutionSlider);
    
-   Slider resistorSlider = new Slider(mainPApplet, "Widerstand", allPosx, getYPos(5) ,getSliderWidth(), getSliderHeight(),limitLowResistorValue, limitHighResistorValue);
+   Slider resistorSlider = new Slider(mainPApplet, "Widerstand", allPosx, getYPos(8) ,getSliderWidth(), getSliderHeight(),limitLowResistorValue, limitHighResistorValue);
    allConfigSlider.add(resistorSlider);
    
-   Slider capacitorSlider = new Slider(mainPApplet, "Kondensator", allPosx, getYPos(6) ,getSliderWidth(), getSliderHeight(),limitLowCapacitorValue, limitHighCapacitorValue);
+   Slider capacitorSlider = new Slider(mainPApplet, "Kondensator", allPosx, getYPos(9) ,getSliderWidth(), getSliderHeight(),limitLowCapacitorValue, limitHighCapacitorValue);
    allConfigSlider.add(capacitorSlider);
    
-    Slider gateTimeSlider = new Slider(mainPApplet, "GateTimeNs", allPosx, getYPos(7) ,getSliderWidth(), getSliderHeight(),limitLowGateTime, limitHighGateTime);
+    Slider gateTimeSlider = new Slider(mainPApplet, "GateTimeNs", allPosx, getYPos(10) ,getSliderWidth(), getSliderHeight(),limitLowGateTime, limitHighGateTime);
    allConfigSlider.add(gateTimeSlider);
    
-      Slider counterBitsSlider = new Slider(mainPApplet, "CounterBits", allPosx, getYPos(8) ,getSliderWidth(), getSliderHeight(),limitLowCounterBits, limitHighCounterBits);
+      Slider counterBitsSlider = new Slider(mainPApplet, "CounterBits", allPosx, getYPos(11) ,getSliderWidth(), getSliderHeight(),limitLowCounterBits, limitHighCounterBits);
    allConfigSlider.add(counterBitsSlider);
    
    
