@@ -28,6 +28,12 @@ class OutputGraph{
     
   }
   
+  void reset(){
+    
+    points.removeRange(0, points.getNPoints()-1);
+    
+  }
+  
   
   void display(){
     

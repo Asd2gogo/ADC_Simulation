@@ -36,6 +36,7 @@ void setup() {
 
 
   size(1280, 1024);
+ // size(1024, 768);
   frameRate(60);
 
   myUi = new Ui(this);
@@ -193,7 +194,15 @@ void drawLoadingBar(float step, int xPos, int yPos, float barWidth) {
 
 public void handleButtonEvents(GButton button, GEvent event) {
 
-  play = !play;
+  if(button.getText().equals("PlayPause")){
+     play = !play;
+  }else
+  if(button.getText().equals("Reset")){
+    
+    myOutGraph.reset();
+    
+  }
+ 
 }
 
 void drawRects() {
@@ -227,7 +236,7 @@ void updateBlockDiagramText(){
   textSize(15);
   
    String inputVoltage = nf(myUi.getSliderValue("InputVoltage"));        //Eingangsspannung
-   if(inputVoltage.length()> 1){
+   if(inputVoltage.length()> 2){
      inputVoltage = inputVoltage.substring(0,3);
    }
   text("Eingangs" +"\n" +  "Spannung" + "\n     "  + inputVoltage + "V" ,20, 530 );

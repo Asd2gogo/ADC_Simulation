@@ -70,6 +70,7 @@ class Ui{
   
   ArrayList<Slider> allConfigSlider;
   GButton playBtn;
+  GButton resetBtn;
   
  
   Ui(PApplet applet){
@@ -136,6 +137,7 @@ class Ui{
  void setupButtons(){
   
    playBtn = new GButton(mainPApplet, width - 100, 2, 100 , 50, "PlayPause");
+   resetBtn = new GButton(mainPApplet, width - 200, 2, 100, 50, "Reset");
    
  }
  
